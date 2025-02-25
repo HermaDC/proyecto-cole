@@ -5,13 +5,13 @@ DATABASE = 'tienda.db'
 
 class Carro:
     def __init__(self):
-        self.items = {} #{nombre:()}
+        self.items = {} #{nombre:(class item, cantidad: int)}
 
     def agregar(self, item):
         if item.nombre in self.items:
             self.items[item.nombre][1] += item.cantidad
         else:
-            self.items[item.nombre] = (item, item.cantidad)
+            self.items[item.nombre] = [item, item.cantidad]
         print(self.items)
 
     def remover(self, item):

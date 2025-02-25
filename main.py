@@ -3,6 +3,7 @@ from clases_control import *
 
 import flet as ft
 
+carro = Carro()
 def main(page: ft.Page):
     carrito = []  # Lista para almacenar los productos agregados
 
@@ -12,17 +13,18 @@ def main(page: ft.Page):
 
         if page.route == "/":
             # Vista de la Tienda
+            cuadr = Cuadricula()
+            productos = get_productos()
+
+            # Agregar productos
+            for producto in productos:
+                cuadr.controls.append(Item(producto[0], producto[1], producto[2], page, width=120, height=80, carro=carro))
+
             page.views.append(
                 ft.View(
                     "/",
                     [
-                        ft.Text("🛒 Tienda", size=30, weight=ft.FontWeight.BOLD),
-                        ft.ElevatedButton("Ver Carrito", on_click=lambda e: page.go("/carrito")),
-                        ft.Divider(),
-                        ft.Text("📦 Producto 1 - $10"),
-                        ft.ElevatedButton("Agregar al carrito", on_click=lambda e: agregar_al_carrito("Producto 1 - $10")),
-                        ft.Text("📦 Producto 2 - $15"),
-                        ft.ElevatedButton("Agregar al carrito", on_click=lambda e: agregar_al_carrito("Producto 2 - $15")),
+                        Header(page), cuadr
                     ],
                 )
             )
@@ -33,10 +35,7 @@ def main(page: ft.Page):
                 ft.View(
                     "/carrito",
                     [
-                        ft.Text("🛍️ Carrito de Compras", size=30, weight=ft.FontWeight.BOLD),
-                        ft.ElevatedButton("Volver a la Tienda", on_click=lambda e: page.go("/")),
-                        ft.Divider(),
-                        ft.Column([ft.Text(item) for item in carrito]) if carrito else ft.Text("🛑 Carrito vacío"),
+                        CarritoHeader(page), CarritoInterface(carro)
                     ],
                 )
             )
