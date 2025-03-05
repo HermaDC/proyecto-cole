@@ -12,9 +12,9 @@ Información importante:
 * Los TODO ignoralos, son comentarios para mejorar cosas.
 """
 
-# TODO: Agregar lógica del carrito
+
 # TODO: Mejorar la UI
-# TODO: Revisar añadir carrito
+
 
 
 class Header(ft.AppBar):
@@ -57,7 +57,6 @@ class Item(ft.Container):
 
         main = ft.Column(
             [
-                ft.Image("https://via.placeholder.com/150", width=150, height=150),
                 ft.Row(
                     [
                         ft.Text(self.nombre, size=25),
@@ -81,6 +80,7 @@ class Item(ft.Container):
                 ft.IconButton(ft.Icons.SHOPPING_CART, on_click=self.add_to_cart),
             ],
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+            
         )
 
         self.content = ft.Container(
@@ -92,6 +92,7 @@ class Item(ft.Container):
             padding=10,
             border_radius=10,
             width=250,
+            height=150,
         )
 
     def minus_click(self, e):
@@ -122,31 +123,50 @@ class Cuadricula(ft.GridView):
             **kwargs
         )
 
-import flet as ft
 
 class CarritoInterface(ft.Container):
-    def __init__(self, carro):
+    def __init__(self, carro, page: ft.Page):
         super().__init__(
             bgcolor="#a5a5a5",
             padding=10,
         )
         self.carro = carro
+        self.root = page
         self.actualizar_ui()  # Inicializa la UI correctamente
 
     def actualizar_ui(self):
         """Regenera la UI del carrito con los productos actualizados."""
-        rows = []
-        for product_name, obj_cant in self.carro.items.items():
-            row = ft.Row([
-                ft.Text(f"{product_name}", size=20, weight=ft.FontWeight.BOLD),
-                ft.Text(f"Cantidad: {obj_cant[1]}"),
-                ft.Text(f"Precio {obj_cant[0].precio * obj_cant[1]}€", color=ft.Colors.GREEN),
-                ft.IconButton(ft.Icons.DELETE, on_click=lambda e, name=product_name, obj=obj_cant[0]: self.retirar_carro(e, name, obj))
-            ], 
-            alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
-            rows.append(row)
+        if self.carro.items.items():  # Comprobar si hay productos en el carrito
+            rows = []
+            for product_name, obj_cant in self.carro.items.items():
+                row = ft.Row([
+                    ft.Text(f"{product_name}", size=20, weight=ft.FontWeight.BOLD),
+                    ft.Text(f"Cantidad: {obj_cant[1]}"),
+                    ft.Text(f"Precio {obj_cant[0].precio * obj_cant[1]}€", color=ft.Colors.GREEN),
+                    ft.IconButton(ft.Icons.DELETE, on_click=lambda e, name=product_name, obj=obj_cant[0]: self.retirar_carro(e, name, obj))
+                ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
+                rows.append(row)
 
-        self.content = ft.Column(rows, spacing=10)
+            self.content = ft.Column(rows + [ft.Container(
+                    ft.Text(
+                        f"Total: {self.carro.total()}€", 
+                        size=30, 
+                        weight=ft.FontWeight.BOLD,
+                        text_align=ft.TextAlign.RIGHT
+                    ),
+                    alignment=ft.alignment.center_right,  
+                    expand=True
+                ), ft.ElevatedButton(
+                        text="Pagar",
+                        icon=ft.icons.CREDIT_CARD,
+                        on_click=lambda e: [self.carro.pagar(), self.page.go("/"), self.actualizar_ui()],)
+                ],
+                spacing=10,
+                alignment=ft.MainAxisAlignment.CENTER)
+        else:
+            # Si el carrito está vacío, no mostrar nada o mostrar un mensaje
+            self.content = ft.Column([ft.Text("El carrito está vacío.", size=30, color=ft.Colors.RED, text_align=ft.TextAlign.CENTER )], spacing=10)
+        #self.update()
 
     def retirar_carro(self, e, product_name, obj):
         """Elimina un producto del carrito y actualiza la UI."""

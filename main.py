@@ -35,18 +35,12 @@ def main(page: ft.Page):
                 ft.View(
                     "/carrito",
                     [
-                        CarritoHeader(page), CarritoInterface(carro)
+                        CarritoHeader(page), CarritoInterface(carro, page)
                     ],
                 )
             )
 
         page.update()
-
-    # Función para agregar productos al carrito
-    def agregar_al_carrito(producto):
-        carrito.append(producto)
-        page.update()
-
     page.on_route_change = route_change
     page.go("/")  # Cargar la vista inicial
 

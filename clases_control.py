@@ -48,7 +48,7 @@ class Carro:
         conn.commit()
         conn.close()
         self.vaciar()
-
+        print("Compra realizada con éxito")
     
     def __str__(self):
         return f"Carro: {self.items}"
