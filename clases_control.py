@@ -18,7 +18,7 @@ class Carro:
         if item.nombre in self.items:
             self.items[item.nombre][1] -= item.cantidad
             if self.items[item.nombre][1] <= 0:
-                del self.items[item]
+                del self.items[item.nombre]
 
     def total(self) -> float:
         """Calcula el total de la compra teniendo en cuenta cantidades"""

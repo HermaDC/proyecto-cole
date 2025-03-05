@@ -122,26 +122,39 @@ class Cuadricula(ft.GridView):
             **kwargs
         )
 
+import flet as ft
+
 class CarritoInterface(ft.Container):
     def __init__(self, carro):
         super().__init__(
             bgcolor="#a5a5a5",
-            padding=10,  # Agregamos un poco de padding para mejorar el diseño
+            padding=10,
         )
+        self.carro = carro
+        self.actualizar_ui()  # Inicializa la UI correctamente
 
-        rows: list[ft.Row] = []
-        for product_name, obj_cant in carro.items.items():
+    def actualizar_ui(self):
+        """Regenera la UI del carrito con los productos actualizados."""
+        rows = []
+        for product_name, obj_cant in self.carro.items.items():
             row = ft.Row([
                 ft.Text(f"{product_name}", size=20, weight=ft.FontWeight.BOLD),
                 ft.Text(f"Cantidad: {obj_cant[1]}"),
-                ft.Text(f"Precio {obj_cant[0].precio * obj_cant[1]}€", color=ft.Colors.GREEN)
-                #TODO añadir eliminar ft.IconButton()
+                ft.Text(f"Precio {obj_cant[0].precio * obj_cant[1]}€", color=ft.Colors.GREEN),
+                ft.IconButton(ft.Icons.DELETE, on_click=lambda e, name=product_name, obj=obj_cant[0]: self.retirar_carro(e, name, obj))
             ], 
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
             rows.append(row)
 
-        # Encapsulamos en ft.Column
         self.content = ft.Column(rows, spacing=10)
+
+    def retirar_carro(self, e, product_name, obj):
+        """Elimina un producto del carrito y actualiza la UI."""
+        if product_name in self.carro.items:
+            self.carro.remover(obj)  # Elimina del carrito
+            self.actualizar_ui()  # Vuelve a generar la UI sin el producto
+            self.update()  # Refresca la UI
+
 
 def main(page: ft.Page):
     page.title = "Interfaz"
