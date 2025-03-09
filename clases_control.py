@@ -27,7 +27,6 @@ class Carro:
     def total(self) -> float:
         """Calcula el total de la compra teniendo en cuenta cantidades"""
         return sum(producto.precio * cantidad for producto, cantidad in self.items.values())
-
     
     def vaciar(self):
         """Vacia el carro"""

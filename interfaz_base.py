@@ -27,7 +27,7 @@ class Header(ft.AppBar):
             bgcolor=ft.Colors.BLUE_200,
             actions=[
                 ft.IconButton(ft.Icons.SHOPPING_CART, on_click=lambda e: self.root.go("/carrito")),
-                ft.IconButton(ft.Icons.EXIT_TO_APP, on_click=lambda e: print("cerrar")),
+                ft.IconButton(ft.Icons.EXIT_TO_APP, on_click=cerrar),
             ],
             **kwargs
         )
@@ -202,6 +202,9 @@ def main(page: ft.Page):
     # Actualizar la página
     page.update()
 
+def cerrar():
+    """Función para cerrar la aplicación"""
+    raise SystemExit
 if __name__ == "__main__":
     carro = Carro()
 
