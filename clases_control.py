@@ -8,15 +8,19 @@ class Carro:
         self.items = {} #{nombre:(class item, cantidad: int)}
 
     def agregar(self, item):
+        """Agrega un producto al carro"""
         if item.nombre in self.items:
             self.items[item.nombre][1] += item.cantidad
+            self.items[item.nombre][0].cantidad += item.cantidad
         else:
             self.items[item.nombre] = [item, item.cantidad]
         print(self.items)
 
     def remover(self, item):
+        """Quita un producto del carro"""
         if item.nombre in self.items:
             self.items[item.nombre][1] -= item.cantidad
+            self.items[item.nombre][0].cantidad -= item.cantidad
             if self.items[item.nombre][1] <= 0:
                 del self.items[item.nombre]
 
@@ -26,6 +30,7 @@ class Carro:
 
     
     def vaciar(self):
+        """Vacia el carro"""
         self.items = {}
 
     def pagar(self):
@@ -54,11 +59,13 @@ class Carro:
         return f"Carro: {self.items}"
 
 class Producto:
+    """Clase que representa un producto de la tienda"""
     def __init__(self, filtro: str | int, cantidad: int):
         self.id, self.nombre, self.precio, self.stock = self.__get_info(filtro)
         self.cantidad = cantidad
 
     def __get_info(self, filtro)-> tuple[int, str, float, int]:
+        """Obtiene la información de un producto de la base de datos. **Metodo privado**"""
         conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         if isinstance(filtro, int):
@@ -126,4 +133,7 @@ if __name__ == "__main__":
     print(a)
     carr = Carro()
     carr.agregar(a)
+    carr.agregar(a)
     print(carr.total(), carr)
+    carr.pagar()
+    print("pagado!!")

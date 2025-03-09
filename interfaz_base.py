@@ -33,12 +33,14 @@ class Header(ft.AppBar):
         )
         self.root = page
 class CarritoHeader(Header):
+    """crea el appbar de la pagina del carrito"""
     def __init__(self, page, **kwargs):
         super().__init__(page, **kwargs)
         self.title = ft.Text("Carrito")
         self.leading = ft.IconButton(ft.Icons.ARROW_BACK, on_click= lambda e: self.root.go("/"))
 
 class Item(ft.Container):
+    """Cuadradod de cadad producto"""
     def __init__(self, nombre, precio, stock, page, carro, **kwargs):
         super().__init__(
             bgcolor="#a5a5a5",
@@ -96,16 +98,19 @@ class Item(ft.Container):
         )
 
     def minus_click(self, e):
+        """"Resta 1 a la cantidad del producto"""
         if int(self.txt_number.value or 0) < 1:
             return
         self.txt_number.value = str(int(self.txt_number.value or 0) - 1)
         self.root.update()
 
     def plus_click(self, e):
+        """Suma 1 a la cantidad del producto"""
         self.txt_number.value = str(int(self.txt_number.value or 0) + 1)
         self.root.update()
 
     def add_to_cart(self, e):
+        """Agrega el producto  con su cantidad al carrito"""
         cantidad = self.txt_number.value
         if int(cantidad or 0) != 0:
             self.carro.agregar(Producto(self.nombre, int(cantidad or 0)))
@@ -114,6 +119,7 @@ class Item(ft.Container):
             print("hecho")
 
 class Cuadricula(ft.GridView):
+    """Crea una cuadrícula de productos"""
     def __init__(self, **kwargs):
         super().__init__(
             expand=True,
@@ -125,6 +131,7 @@ class Cuadricula(ft.GridView):
 
 
 class CarritoInterface(ft.Container):
+    """Interfaz del carrito de compras"""
     def __init__(self, carro, page: ft.Page):
         super().__init__(
             bgcolor="#a5a5a5",
@@ -159,14 +166,13 @@ class CarritoInterface(ft.Container):
                 ), ft.ElevatedButton(
                         text="Pagar",
                         icon=ft.icons.CREDIT_CARD,
-                        on_click=lambda e: [self.carro.pagar(), self.page.go("/"), self.actualizar_ui()],)
+                        on_click=lambda e: [self.carro.pagar(), self.root.go("/"), self.actualizar_ui()],)
                 ],
                 spacing=10,
                 alignment=ft.MainAxisAlignment.CENTER)
         else:
             # Si el carrito está vacío, no mostrar nada o mostrar un mensaje
             self.content = ft.Column([ft.Text("El carrito está vacío.", size=30, color=ft.Colors.RED, text_align=ft.TextAlign.CENTER )], spacing=10)
-        #self.update()
 
     def retirar_carro(self, e, product_name, obj):
         """Elimina un producto del carrito y actualiza la UI."""

@@ -5,8 +5,6 @@ import flet as ft
 
 carro = Carro()
 def main(page: ft.Page):
-    carrito = []  # Lista para almacenar los productos agregados
-
     # Función para manejar la navegación
     def route_change(route):
         page.views.clear()
